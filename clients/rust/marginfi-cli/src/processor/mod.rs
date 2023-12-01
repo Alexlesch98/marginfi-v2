@@ -439,7 +439,7 @@ pub fn group_add_bank(
     Ok(())
 }
 
-#[allow(clippy::too_many_arguments)]
+#[allow(clippy::too_many_arguments, dead_code)]
 #[cfg(feature = "admin")]
 pub fn group_handle_bankruptcy(
     config: &Config,
@@ -475,6 +475,7 @@ pub fn group_handle_bankruptcy(
     Ok(())
 }
 
+#[allow(dead_code)]
 pub fn group_auto_handle_bankruptcy_for_an_account(
     config: &Config,
     profile: Profile,
@@ -526,6 +527,7 @@ pub fn group_auto_handle_bankruptcy_for_an_account(
     Ok(())
 }
 
+#[allow(dead_code)]
 fn handle_bankruptcy_for_an_account(
     config: &Config,
     profile: &Profile,
@@ -570,8 +572,8 @@ fn handle_bankruptcy_for_an_account(
     handle_bankruptcy_ix
         .accounts
         .extend(load_observation_account_metas(
-            &marginfi_account,
-            &banks,
+            marginfi_account,
+            banks,
             vec![bank_pk],
             vec![],
         ));
@@ -584,7 +586,7 @@ fn handle_bankruptcy_for_an_account(
     let mut transaction = Transaction::new_unsigned(message);
     transaction.partial_sign(&signing_keypairs, recent_blockhash);
 
-    match process_transaction(&transaction, &rpc_client, config.get_tx_mode()) {
+    match process_transaction(&transaction, rpc_client, config.get_tx_mode()) {
         Ok(sig) => println!("Bankruptcy handled (sig: {})", sig),
         Err(err) => println!("Error during bankruptcy handling:\n{:#?}", err),
     };
@@ -715,8 +717,8 @@ fn make_bankruptcy_ix(
     handle_bankruptcy_ix
         .accounts
         .extend(load_observation_account_metas(
-            &marginfi_account,
-            &banks,
+            marginfi_account,
+            banks,
             vec![bank_pk],
             vec![],
         ));
@@ -833,6 +835,7 @@ Price: ${price} (worst: ${worst}, best: ${best}, std_dev: ${std})
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 #[cfg(feature = "admin")]
 pub fn bank_setup_emissions(
     config: &Config,
@@ -927,6 +930,7 @@ pub fn bank_setup_emissions(
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 #[cfg(feature = "admin")]
 pub fn bank_update_emissions(
     config: &Config,
@@ -1865,7 +1869,7 @@ Deposit start {}, end {} ({})
 
 #[cfg(feature = "lip")]
 fn timestamp_to_string(timestamp: i64) -> String {
-    DateTime::<Utc>::from_utc(
+    DateTime::<Utc>::from_naive_utc_and_offset(
         NaiveDateTime::from_timestamp_opt(timestamp, 0).unwrap(),
         Utc,
     )
