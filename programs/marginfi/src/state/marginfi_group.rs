@@ -19,8 +19,10 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{transfer, Transfer};
 use fixed::types::I80F48;
 use pyth_sdk_solana::{load_price_feed_from_account_info, PriceFeed};
+#[cfg(feature = "client")]
+use std::fmt::Display;
 use std::{
-    fmt::{Debug, Display, Formatter},
+    fmt::{Debug, Formatter},
     ops::Not,
 };
 
@@ -273,7 +275,7 @@ pub struct InterestRateConfigOpt {
 }
 
 assert_struct_size!(Bank, 1856);
-#[account(zero_copy)]
+#[account(zero_copy(unsafe))]
 #[repr(C)]
 #[cfg_attr(
     any(feature = "test", feature = "client"),
@@ -809,7 +811,7 @@ pub enum RiskTier {
     Isolated,
 }
 
-#[zero_copy]
+#[zero_copy(unsafe)]
 #[repr(C)]
 #[cfg_attr(
     any(feature = "test", feature = "client"),
@@ -887,7 +889,7 @@ impl From<BankConfig> for BankConfigCompact {
 }
 
 assert_struct_size!(BankConfig, 544);
-#[zero_copy]
+#[zero_copy(unsafe)]
 #[repr(C)]
 #[cfg_attr(
     any(feature = "test", feature = "client"),
